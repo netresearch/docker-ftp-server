@@ -7,9 +7,11 @@ Usage
 -----
 
 docker::
+
   docker run --rm --name netresearch-ftp -d -e USER=foo -e PASSWORD=bar -v "$(pwd)/data:/home" -p "20:20" -p "21:21" -p "10090-10100:10090-10100" registry.netresearch.de/docker/ftp
 
 docker-compose::
+
   ftp:
     image: registry.netresearch.de/docker/ftp
     environment:
