@@ -1,22 +1,21 @@
 Netresearch docker image for to provide a ftp server
 ====================================================
 
-This image provide a ftp server for one user which can be freely defined and is create on startup.
+This image provide a ftp server for multiple users which can be freely defined and are create on startup.
 
 Usage
 -----
 
 docker::
 
-  docker run --rm --name netresearch-ftp -d -e USER=foo -e PASSWORD=bar -v "$(pwd)/data:/home" -p "20:20" -p "21:21" -p "10090-10100:10090-10100" registry.netresearch.de/docker/ftp
+  docker run --rm --name netresearch-ftp -d -e USERS=user1:pass1;user2:pass2 -v "$(pwd)/data:/home" -p "20:20" -p "21:21" -p "10090-10100:10090-10100" registry.netresearch.de/docker/ftp
 
 docker-compose::
 
   ftp:
     image: registry.netresearch.de/docker/ftp
     environment:
-      - USER=foo
-      - PASSWORD=bar
+      - USERS=user1,pass1;user2,pass2
     volumes:
       - "./data:/home"
     ports:

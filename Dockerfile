@@ -1,6 +1,8 @@
 FROM alpine:3.7
 
-RUN apk --update --no-cache add vsftpd
+RUN apk --update --no-cache add \
+    bash \
+    vsftpd
 
 COPY /setup /
 

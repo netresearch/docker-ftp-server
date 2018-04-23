@@ -1,7 +1,13 @@
-#!/bin/sh
+#!/bin/bash
+set -e
 
-adduser -h /home/./${USER} -s /bin/false -D ${USER}
-echo "${USER}:${PASSWORD}" | /usr/sbin/chpasswd
-chown ${USER}:${USER} /home/${USER}/ -R
+arrUSERS=(${USERS//;/ })
+for userAndPass in "${arrUSERS[@]}"
+    do
+        username=${userAndPass%%:*}
+        adduser -h /home/./${username} -s /bin/false -D ${username}
+        echo "${userAndPass}" | /usr/sbin/chpasswd
+        chown ${username}:${username} /home/${username}/ -R
+done
 
 /usr/sbin/vsftpd /etc/vsftpd/vsftpd.conf
