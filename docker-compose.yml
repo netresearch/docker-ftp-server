@@ -5,8 +5,7 @@ services:
     image: registry.netresearch.de/docker/ftp
     build: .
     environment:
-      - USER=foo
-      - PASSWORD=bar
+      - USERS=foo:tGpvcxMKCEcEP8d9lMfnQ3bQcdLj6tFl;bar:ji7U9U6Wh6TA3ymuL6IJjeqxM8Qkcs46
     volumes:
       - "./data:/home"
     ports:
