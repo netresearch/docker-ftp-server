@@ -18,6 +18,7 @@ resources:
     password: {{GITLAB_NETRESEARCH_USER_TOKEN}}
 jobs:
 - name: job-build-image
+  build_logs_to_retain: 5
   plan:
   - aggregate:
     - get: docker-image-alpine
