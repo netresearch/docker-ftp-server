@@ -22,3 +22,11 @@ docker-compose::
       - "20:20"
       - "21:21"
       - "10090-10100:10090-10100"
+
+Build
+-----
+
+To build this repository uses docker-compose::
+
+  docker-compose build
+  docker-compose push
