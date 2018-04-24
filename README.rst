@@ -15,7 +15,7 @@ docker-compose::
   ftp:
     image: registry.netresearch.de/docker/ftp
     environment:
-      - USERS=user1,pass1;user2,pass2
+      - USERS=user1:pass1;user2:pass2
     volumes:
       - "./data:/home"
     ports:
