@@ -1,7 +1,7 @@
 Netresearch docker image for to provide a ftp server
 ====================================================
 
-This image provide a ftp server for multiple users which can be freely defined and are create on startup.
+This image provides a ftp server for multiple users which can be freely defined and are created on startup.
 
 Usage
 -----
