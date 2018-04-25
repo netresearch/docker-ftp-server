@@ -26,7 +26,7 @@ docker-compose::
 Build
 -----
 
-To build this repository uses docker-compose::
+To build this repository use docker-compose::
 
   docker-compose build
   docker-compose push
