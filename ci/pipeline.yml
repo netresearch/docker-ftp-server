@@ -1,32 +1,30 @@
 resources:
-- name: docker-image-alpine
-  type: docker-image
+- name: trigger-every-day
+  type: time
   source:
-    repository: alpine
-    tag: 3.7
+    interval: 1d
 - name: git-netresearch-ftp
   type: git
   source:
-    private_key: {{GIT_NETRESEARCH_AUTH_KEY}}
+    private_key: ((GIT_NETRESEARCH_AUTH_KEY))
     uri:  git@git.netresearch.de:docker/ftp.git
     branch: master
 - name: docker-image-netresearch-ftp
   type: docker-image
   source:
     repository: registry.netresearch.de/docker/ftp
-    username: {{GITLAB_NETRESEARCH_USER}}
-    password: {{GITLAB_NETRESEARCH_USER_TOKEN}}
+    username: ((GITLAB_NETRESEARCH_USER))
+    password: ((GITLAB_NETRESEARCH_USER_TOKEN))
 jobs:
 - name: job-build-image
   build_logs_to_retain: 5
   plan:
-  - aggregate:
-    - get: docker-image-alpine
-      trigger: true
-    - get: git-netresearch-ftp
-      trigger: true
-      params:
-        depth: 1
+  - get: trigger-every-day
+    trigger: true
+  - get: git-netresearch-ftp
+    trigger: true
+    params:
+      depth: 1
   - put: docker-image-netresearch-ftp
     params:
       build: git-netresearch-ftp

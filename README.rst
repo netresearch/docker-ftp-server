@@ -1,4 +1,4 @@
-Netresearch docker image for to provide a ftp server
+Netresearch Docker image for to provide a FTP server
 ====================================================
 
 This image provides a ftp server for multiple users which can be freely defined and are created on startup.
@@ -26,7 +26,7 @@ docker-compose::
 Build
 -----
 
-To build this repository use docker-compose::
+To build the image use docker-compose::
 
   docker-compose build
   docker-compose push
