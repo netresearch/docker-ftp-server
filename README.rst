@@ -7,8 +7,8 @@ and are created on startup and have the purpose to provide a central ftp service
 
 To share the data managed by the sftp container mount the ``/home`` directory to a named volume or to a path on your host.
 
-You can also adjust the vsftpd configuration by mount your own to ``/etc/vsftpd/vsftpd.conf`` inside the container.
-Please not that the entrypoint will adjust the ownership and permissions on your mounted file to get the service work.
+You can also adjust the vsftpd configuration by mounting your own configuration to ``/etc/vsftpd/vsftpd.conf`` inside the container.
+Please note that the entrypoint will adjust the ownership and permissions on your mounted file to get the service up and running.
 
 
 Usage
