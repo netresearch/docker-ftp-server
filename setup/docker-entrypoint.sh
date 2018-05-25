@@ -13,9 +13,14 @@ for userAndPass in "${arrUSERS[@]}"
             echo "Create user ${username}"
         fi
         echo "${userAndPass}" | /usr/sbin/chpasswd
-        chown ${username}:${username} /home/${username}/ -R
-        find /home/${username} -type d -exec chmod 2700 {} \;
-        find /home/${username} -type f -exec chmod 0600 {} \;
+        if [ -z ${GROUP} ]; then
+            GROUP=${username}
+        fi
+
+        chown ${username}:${GROUP} /home/${username}/ -R
+        chmod 2700 /home/${username}
+        find /home/${username} -type d -exec chmod 2775 {} \;
+        find /home/${username} -type f -exec chmod 0664 {} \;
 done
 
 # Fix vsftpd.conf permissions
