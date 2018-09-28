@@ -6,6 +6,12 @@ services:
     build: .
     environment:
       - USERS=foo:tGpvcxMKCEcEP8d9lMfnQ3bQcdLj6tFl;bar:ji7U9U6Wh6TA3ymuL6IJjeqxM8Qkcs46
+      - ENABLE_LOGGING=yes
+      - ENABLE_PASSIVE_MODE=yes
+      - PASSIVE_MODE_MIN_PORT=10090
+      - PASSIVE_MODE_MAX_PORT=10100
+      - PASSIVE_MODE_ADDRESS=sobol.nr
+      - PASSIVE_MODE_RESOLVE=yes
     volumes:
       - "data:/home"
     ports:
