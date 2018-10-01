@@ -10,6 +10,14 @@ To share the data managed by the sftp container mount the ``/home`` directory to
 You can also adjust the vsftpd configuration by mounting your own configuration to ``/etc/vsftpd/vsftpd.conf`` inside the container.
 Please note that the entrypoint will adjust the ownership and permissions on your mounted file to get the service up and running.
 
+Build
+-----
+
+To build the image use the provided docker-compose.yml::
+
+  docker-compose build
+  docker-compose push
+
 
 Usage
 -----
@@ -42,10 +50,33 @@ To run with docker-compose, you need to create your own docker-compose.yml:
       - "10090-10100:10090-10100"
 
 
-Build
------
+Configuration
+-------------
 
-To build the image use the provided docker-compose.yml::
+Some common configuration could be done via environment variables. ::
 
-  docker-compose build
-  docker-compose push
+    environment:
+      ## User which should be created on the server an have thier own directory
+      - USERS=foo:tGpvcxMKCEcEP8d9lMfnQ3bQcdLj6tFl;bar:ji7U9U6Wh6TA3ymuL6IJjeqxM8Qkcs46
+      ## Enables the transfer log
+      - ENABLE_LOGGING=yes
+      ## Enable the passive mode. If this option is enabled please check the following option.
+      - ENABLE_PASSIVE_MODE=yes
+      ## Startport for passive mode port range. Have to be set if passive mode is enabled.
+      - PASSIVE_MODE_MIN_PORT=10090
+      ## Endport for passive mode port range. Have to be set if passive mode is enabled.
+      - PASSIVE_MODE_MAX_PORT=10100
+      ## Address for passive mode, eg server public ip or server address. Have to be set if passive mode is enabled.
+      - PASSIVE_MODE_ADDRESS=sobol.nr
+      ## Resolve the passive mode address. Have to be set if the PASSIVE_MODE_ADDRESS is a name.
+      - PASSIVE_MODE_RESOLVE=yes
+
+
+Logging
+-------
+
+If the transfer log is enabled it will be stored in /var/log/vsftp.log within the container. 
+
+
+
+
