@@ -62,20 +62,20 @@ Some common configuration could be done via environment variables. ::
       - ENABLE_LOGGING=yes
       ## Enable the passive mode. If this option is enabled please check the following option.
       - ENABLE_PASSIVE_MODE=yes
-      ## Startport for passive mode port range. Have to be set if passive mode is enabled.
+      ## Startport for passive mode port range. Required if passive mode is enabled.
       - PASSIVE_MODE_MIN_PORT=10090
-      ## Endport for passive mode port range. Have to be set if passive mode is enabled.
+      ## Endport for passive mode port range. Required if passive mode is enabled.
       - PASSIVE_MODE_MAX_PORT=10100
-      ## Address for passive mode, eg server public ip or server address. Have to be set if passive mode is enabled.
+      ## Address for passive mode, eg server public ip or server address. Required if passive mode is enabled.
       - PASSIVE_MODE_ADDRESS=sobol.nr
-      ## Resolve the passive mode address. Have to be set if the PASSIVE_MODE_ADDRESS is a name.
+      ## Resolve the passive mode address. Required if the PASSIVE_MODE_ADDRESS is a name.
       - PASSIVE_MODE_RESOLVE=yes
 
 
 Logging
 -------
 
-If the transfer log is enabled it will be stored in /var/log/vsftp.log within the container. 
+If the transfer log is enabled it will be stored in /var/log/vsftp.log within the container.
 
 
 
