@@ -31,6 +31,8 @@ chmod 664  /etc/vsftpd/vsftpd.conf
 
 if [ "${ENABLE_LOGGING}" == "yes" ]; then
     echo "xferlog_enable=YES" >> /etc/vsftpd/vsftpd.conf
+    echo "xferlog_std_format=NO" >> /etc/vsftpd/vsftpd.conf
+    echo "log_ftp_protocol=YES" >> /etc/vsftpd/vsftpd.conf
 fi
 
 if [ "${ENABLE_PASSIVE_MODE}" == "yes" ]; then
