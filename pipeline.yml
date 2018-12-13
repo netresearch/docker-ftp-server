@@ -1,0 +1,54 @@
+resources:
+# Git
+- name:                       git-netresearch-ftp
+  type:                       git
+  source:
+    uri:                      https://git.netresearch.de/docker/ftp.git
+    username:                 ((GIT.NETRESEARCH_USER))
+    password:                 ((GIT.NETRESEARCH_PASSWORD))
+
+# Docker
+- name:                       docker-image-netresearch-ftp
+  type:                       docker-image
+  source:
+    repository:               registry.netresearch.de/docker/ftp
+    username:                 ((GIT.NETRESEARCH_USER))
+    password:                 ((GIT.NETRESEARCH_PASSWORD))
+
+# Other
+- name:                       slack-nr
+  type:                       slack-notification
+  source:
+    url:                      ((MSG.URL_NR))
+
+
+resource_types:
+- name:                       slack-notification
+  type:                       docker-image
+  source:
+    repository:               arbourd/concourse-slack-alert-resource
+
+
+jobs:
+- name:                       job-build-image
+  build_logs_to_retain:       5
+  plan:
+  - get:                      git-netresearch-ftp
+    trigger:                  true
+    params:
+      depth:                  1
+  - put:                      docker-image-netresearch-ftp
+    params:
+      build:                  git-netresearch-ftp
+  on_success:
+    put:                      slack-nr
+    params:
+      alert_type:             success
+  on_failure:
+    put:                      slack-nr
+    params:
+      alert_type:             failed
+  on_abort:
+    put:                      slack-nr
+    params:
+      alert_type:             aborted
