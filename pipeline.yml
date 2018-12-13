@@ -16,7 +16,7 @@ resources:
     password:                 ((GIT.NETRESEARCH_PASSWORD))
 
 # Other
-- name:                       slack-nr
+- name:                       notification-slack
   type:                       slack-notification
   source:
     url:                      ((MSG.URL_NR))
@@ -41,14 +41,14 @@ jobs:
     params:
       build:                  git-netresearch-ftp
   on_success:
-    put:                      slack-nr
+    put:                      notification-slack
     params:
       alert_type:             success
   on_failure:
-    put:                      slack-nr
+    put:                      notification-slack
     params:
       alert_type:             failed
   on_abort:
-    put:                      slack-nr
+    put:                      notification-slack
     params:
       alert_type:             aborted
