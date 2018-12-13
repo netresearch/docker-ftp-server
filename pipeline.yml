@@ -1,54 +1,63 @@
+---
+
+#####################################################################################
 resources:
+
 # Git
-- name:                       git-netresearch-ftp
-  type:                       git
+- name:                         git-netresearch-ftp
+  type:                         git
   source:
-    uri:                      https://git.netresearch.de/docker/ftp.git
-    username:                 ((GIT.NETRESEARCH_USER))
-    password:                 ((GIT.NETRESEARCH_PASSWORD))
+    uri:                        https://git.netresearch.de/docker/ftp.git
+    username:                   ((GIT.NETRESEARCH_USER))
+    password:                   ((GIT.NETRESEARCH_PASSWORD))
 
 # Docker
-- name:                       docker-image-netresearch-ftp
-  type:                       docker-image
+- name:                         docker-image-netresearch-ftp
+  type:                         docker-image
   source:
-    repository:               registry.netresearch.de/docker/ftp
-    username:                 ((GIT.NETRESEARCH_USER))
-    password:                 ((GIT.NETRESEARCH_PASSWORD))
+    repository:                 registry.netresearch.de/docker/ftp
+    username:                   ((GIT.NETRESEARCH_USER))
+    password:                   ((GIT.NETRESEARCH_PASSWORD))
 
 # Other
-- name:                       notification-slack
-  type:                       slack-notification
+- name:                         notification-slack
+  type:                         slack-notification
+  check_every:                  10m
   source:
-    url:                      ((MSG.URL_NR))
+    url:                        ((MSG.URL_NR))
 
 
+#####################################################################################
 resource_types:
-- name:                       slack-notification
-  type:                       docker-image
+- name:                         slack-notification
+  type:                         docker-image
+  check_every:                  10m
   source:
-    repository:               arbourd/concourse-slack-alert-resource
+    repository:                 arbourd/concourse-slack-alert-resource
 
 
+#####################################################################################
 jobs:
-- name:                       job-build-image
-  build_logs_to_retain:       5
+- name:                         job-build-image
+  serial:                       true
+  build_logs_to_retain:         10
   plan:
-  - get:                      git-netresearch-ftp
-    trigger:                  true
+  - get:                        git-netresearch-ftp
+    trigger:                    true
     params:
-      depth:                  1
-  - put:                      docker-image-netresearch-ftp
+      depth:                    1
+  - put:                        docker-image-netresearch-ftp
     params:
-      build:                  git-netresearch-ftp
+      build:                    git-netresearch-ftp
   on_success:
-    put:                      notification-slack
+    put:                        notification-slack
     params:
-      alert_type:             success
+      alert_type:               success
   on_failure:
-    put:                      notification-slack
+    put:                        notification-slack
     params:
-      alert_type:             failed
+      alert_type:               failed
   on_abort:
-    put:                      notification-slack
+    put:                        notification-slack
     params:
-      alert_type:             aborted
+      alert_type:               aborted
