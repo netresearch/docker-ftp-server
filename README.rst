@@ -31,7 +31,7 @@ Run directly with Docker CLI:
     -e USERS=user1:pass1;user2:pass2 \
     -v "$(pwd)/data:/home" \
     -p "20:20" -p "21:21" -p "10090-10100:10090-10100" \
-    registry.netresearch.de/docker/ftp
+    ghcr.io/netresearch/docker-ftp-server
 
 
 To run with docker-compose, you need to create your own docker-compose.yml:
@@ -39,7 +39,7 @@ To run with docker-compose, you need to create your own docker-compose.yml:
 .. code-block:: yaml
 
   ftp:
-    image: registry.netresearch.de/docker/ftp
+    image: ghcr.io/netresearch/docker-ftp-server
     environment:
       - USERS=user1:pass1;user2:pass2
     volumes:
