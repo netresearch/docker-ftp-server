@@ -97,5 +97,3 @@ This image is configured with ``allow_writeable_chroot=YES`` to enable compatibi
 * Keep the container and host system updated with security patches
 
 
-
-
