@@ -78,5 +78,24 @@ Logging
 If the transfer log is enabled it will be stored in /var/log/vsftp.log within the container.
 
 
+Security Considerations
+-----------------------
+
+This image is configured with ``allow_writeable_chroot=YES`` to enable compatibility with Docker 20.10.14 and newer versions. This setting allows FTP users to have write access to their chroot root directory, which is necessary for the container to function properly since user home directories are created with write permissions.
+
+**Security Trade-off**: Allowing writable chroot directories disables vsftpd's security check that prevents potential chroot escape attacks. This is acceptable for:
+
+* Internal/development environments
+* Trusted users only
+* Containerized environments with proper network isolation
+
+**Recommendations for production use**:
+
+* Use network isolation and firewall rules to restrict FTP access
+* Only create accounts for trusted users
+* Consider using SFTP instead of FTP for better security
+* Keep the container and host system updated with security patches
+
+
 
 
