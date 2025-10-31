@@ -6,6 +6,7 @@ resources:
 # Git
 - name:                         git-netresearch-ftp
   type:                         git
+  icon:                         git
   source:
     uri:                        https://git.netresearch.de/docker/ftp.git
     username:                   ((GIT.NETRESEARCH_USER))
@@ -14,6 +15,7 @@ resources:
 # Docker
 - name:                         docker-image-netresearch-ftp
   type:                         docker-image
+  icon:                         docker
   check_every:                  10m
   source:
     repository:                 ghcr.io/netresearch/docker-ftp-server
@@ -23,6 +25,7 @@ resources:
 # Other
 - name:                         notification-slack
   type:                         slack-notification
+  icon:                         slack
   check_every:                  10m
   source:
     url:                        ((MSG.URL_NR))
@@ -34,6 +37,7 @@ resource_types:
   type:                         docker-image
   source:
     repository:                 arbourd/concourse-slack-alert-resource
+    tag:                        latest
 
 
 #####################################################################################
@@ -50,6 +54,11 @@ jobs:
   - put:                        docker-image-netresearch-ftp
     params:
       build:                    git-netresearch-ftp
+      build_args:
+        BUILDKIT_INLINE_CACHE:  "1"
+      cache:                    true
+      cache_from:
+        - ghcr.io/netresearch/docker-ftp-server:latest
   on_success:
     put:                        notification-slack
     params:
@@ -62,3 +71,4 @@ jobs:
     put:                        notification-slack
     params:
       alert_type:               aborted
+
