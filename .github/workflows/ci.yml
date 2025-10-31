@@ -99,17 +99,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Build and start FTP server
+      - name: Build Docker image
+        run: docker build -t ghcr.io/netresearch/docker-ftp-server:test .
+
+      - name: Start FTP server
         run: |
-          docker compose up -d
+          docker run -d --name ftp-test \
+            -e USERS=testuser:testpass123 \
+            -p 21:21 \
+            ghcr.io/netresearch/docker-ftp-server:test
 
       - name: Wait for FTP server to be ready
         run: |
           echo "Waiting for FTP server to start..."
           for i in {1..30}; do
-            if docker compose ps | grep -q "Up"; then
+            if docker ps | grep -q ftp-test; then
               sleep 2  # Give it a couple more seconds to fully initialize
-              if docker compose exec -T ftp ps aux | grep -q vsftpd; then
+              if docker exec ftp-test ps aux | grep -q vsftpd; then
                 echo "FTP server is ready"
                 exit 0
               fi
@@ -118,13 +124,13 @@ jobs:
             sleep 1
           done
           echo "FTP server failed to start in time"
-          docker compose logs
+          docker logs ftp-test
           exit 1
 
       - name: Check if FTP server is running
         run: |
-          docker compose ps
-          docker compose logs
+          docker ps --filter name=ftp-test
+          docker logs ftp-test
 
       - name: Test FTP connection
         run: |
@@ -142,4 +148,4 @@ jobs:
 
       - name: Cleanup
         if: always()
-        run: docker compose down -v
+        run: docker rm -f ftp-test || true
