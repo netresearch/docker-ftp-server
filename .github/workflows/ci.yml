@@ -88,21 +88,43 @@ jobs:
       - name: Build and start FTP server
         run: |
           docker compose up -d
-          sleep 10
+
+      - name: Wait for FTP server to be ready
+        run: |
+          echo "Waiting for FTP server to start..."
+          for i in {1..30}; do
+            if docker compose ps | grep -q "Up"; then
+              sleep 2  # Give it a couple more seconds to fully initialize
+              if docker compose exec -T ftp ps aux | grep -q vsftpd; then
+                echo "FTP server is ready"
+                exit 0
+              fi
+            fi
+            echo "Waiting... attempt $i/30"
+            sleep 1
+          done
+          echo "FTP server failed to start in time"
+          docker compose logs
+          exit 1
 
       - name: Check if FTP server is running
         run: |
           docker compose ps
           docker compose logs
 
-      - name: Install FTP client
-        run: sudo apt-get update && sudo apt-get install -y ftp
-
       - name: Test FTP connection
         run: |
-          # Test if port 21 is listening
-          timeout 5 bash -c 'until nc -z localhost 21; do sleep 1; done' || (echo "FTP port not available" && exit 1)
-          echo "FTP server is listening on port 21"
+          # Test if port 21 is listening using bash built-in
+          for i in {1..10}; do
+            if timeout 2 bash -c 'cat < /dev/null > /dev/tcp/localhost/21' 2>/dev/null; then
+              echo "FTP server is listening on port 21"
+              exit 0
+            fi
+            echo "Attempt $i/10: FTP port not ready yet"
+            sleep 1
+          done
+          echo "FTP port not available after 10 attempts"
+          exit 1
 
       - name: Cleanup
         if: always()
