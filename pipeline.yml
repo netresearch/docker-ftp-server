@@ -16,7 +16,7 @@ resources:
   type:                         docker-image
   check_every:                  10m
   source:
-    repository:                 registry.netresearch.de/docker/ftp
+    repository:                 ghcr.io/netresearch/docker-ftp-server
     username:                   ((GIT.NETRESEARCH_USER))
     password:                   ((GIT.NETRESEARCH_PASSWORD))
 
