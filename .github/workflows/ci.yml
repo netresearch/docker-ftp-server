@@ -20,7 +20,7 @@ jobs:
   # References @feat/docker-gold-standard until netresearch/.github#251
   # merges; flip to @main afterwards.
   docker-ci:
-    uses: netresearch/.github/.github/workflows/docker-image-ci.yml@feat/docker-gold-standard
+    uses: netresearch/.github/.github/workflows/docker-image-ci.yml@main
     permissions:
       contents: read
       packages: write
