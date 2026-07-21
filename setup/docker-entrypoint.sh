@@ -3,25 +3,26 @@
 set -e
 
 # Add Users and Home directories
+# shellcheck disable=SC2206  # intentional split of ;-separated USERS into an array
 arrUSERS=(${USERS//;/ })
 for userAndPass in "${arrUSERS[@]}"
     do
         username=${userAndPass%%:*}
         # Check if user exists and create if not
-        userInfo="$(id ${username} || echo 'no such user')"
+        userInfo="$(id "${username}" || echo 'no such user')"
         if [ "${userInfo}" == "no such user" ]; then
-            adduser -h /home/./${username} -s /bin/false -D ${username}
+            adduser -h "/home/./${username}" -s /bin/false -D "${username}"
             echo "Create user ${username}"
         fi
         echo "${userAndPass}" | /usr/sbin/chpasswd
-        if [ -z ${GROUP} ]; then
+        if [ -z "${GROUP}" ]; then
             GROUP=${username}
         fi
 
-        chown ${username}:${GROUP} /home/${username}/ -R
-        chmod 2700 /home/${username}
-        find /home/${username}/* -type d -exec chmod 2775 {} \; || :
-        find /home/${username}/* -type f -exec chmod 0664 {} \; || :
+        chown "${username}:${GROUP}" "/home/${username}/" -R
+        chmod 2700 "/home/${username}"
+        find "/home/${username}"/* -type d -exec chmod 2775 {} \; || :
+        find "/home/${username}"/* -type f -exec chmod 0664 {} \; || :
 done
 
 # Fix vsftpd.conf permissions
@@ -30,6 +31,7 @@ chmod 664  /etc/vsftpd/vsftpd.conf
 
 
 if [ "${ENABLE_LOGGING}" == "yes" ]; then
+# shellcheck disable=SC2129  # sequential appends to vsftpd.conf are clearer than a grouped block
     echo "xferlog_enable=YES" >> /etc/vsftpd/vsftpd.conf
     echo "xferlog_std_format=NO" >> /etc/vsftpd/vsftpd.conf
     echo "log_ftp_protocol=YES" >> /etc/vsftpd/vsftpd.conf
@@ -40,15 +42,15 @@ if [ "${ENABLE_PASSIVE_MODE}" == "yes" ]; then
     echo "port_enable=YES" >> /etc/vsftpd/vsftpd.conf
 fi
 
-if [ ! -z ${PASSIVE_MODE_MIN_PORT} ]; then
+if [ -n "${PASSIVE_MODE_MIN_PORT}" ]; then
     echo "pasv_min_port=${PASSIVE_MODE_MIN_PORT}" >> /etc/vsftpd/vsftpd.conf
 fi
 
-if [ ! -z ${PASSIVE_MODE_MAX_PORT} ]; then
+if [ -n "${PASSIVE_MODE_MAX_PORT}" ]; then
     echo "pasv_max_port=${PASSIVE_MODE_MAX_PORT}" >> /etc/vsftpd/vsftpd.conf
 fi
 
-if [ ! -z ${PASSIVE_MODE_ADDRESS} ]; then
+if [ -n "${PASSIVE_MODE_ADDRESS}" ]; then
     echo "pasv_address=${PASSIVE_MODE_ADDRESS}" >> /etc/vsftpd/vsftpd.conf
 fi
 
