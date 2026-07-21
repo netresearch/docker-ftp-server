@@ -36,11 +36,8 @@ jobs:
       shell-scandirs: setup
       lint-yaml: true
       lint-markdown: false
-      # lint-compose stays false until netresearch/.github#251 merges: the
-      # meta pins its leaves @main, but lint-compose.yml is new in #251 and
-      # not yet on main, so enabling it startup-fails the whole run. Re-enable
-      # (with compose-files: docker-compose.yml) after flipping to @main.
-      lint-compose: false
+      lint-compose: true
+      compose-files: docker-compose.yml
       enable-gitleaks: true
       enable-codeql: false
       enable-smoke-test: false
