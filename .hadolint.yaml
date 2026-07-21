@@ -1,0 +1,6 @@
+---
+# Carries forward the DL3018 ignore the previous CI set inline
+# (`ignore: DL3018`). Alpine `apk add` version pinning is impractical for
+# this image, so DL3018 (pin package versions) stays suppressed.
+ignored:
+  - DL3018
