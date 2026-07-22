@@ -17,6 +17,8 @@ jobs:
     uses: netresearch/.github/.github/workflows/build-container-bake.yml@main
     # security-events: write is required because the reusable workflow's job
     # declares it; a caller granting less cannot start the called workflow.
+    # Nothing here consumes it (scan: false) — narrowing it is only possible by
+    # changing netresearch/.github's build-container-bake.yml, not from here.
     permissions:
       contents: read
       packages: write
@@ -36,7 +38,17 @@ jobs:
       # stream on tag/release refs.
       scan: false
       # In-image SPDX SBOM attestation attached to every pushed image.
+      # Replaces the previous downloadable `sbom` workflow artifact; retrieval
+      # is documented in README.rst ("Supply chain metadata").
       sbom: true
+      # `attest` is left at its default (false), which makes the reusable pass an
+      # EMPTY provenance value to docker/bake-action — not "off". With an empty
+      # provenance input, a registry push and a public repository, bake-action
+      # injects `--set <target>.attest=type=provenance,mode=max` itself, so every
+      # pushed image still gets a max-mode SLSA provenance attestation. The
+      # pre-migration docker/build-push-action step behaved identically, so this
+      # is unchanged by the migration. Setting `attest: true` here would be a
+      # no-op for the same reason.
       metadata-images: ghcr.io/${{ github.repository }}
       metadata-tags: |
         type=ref,event=branch

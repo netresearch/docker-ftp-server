@@ -78,6 +78,34 @@ Logging
 If the transfer log is enabled it will be stored in /var/log/vsftp.log within the container.
 
 
+Supply chain metadata
+---------------------
+
+Every image published to ``ghcr.io/netresearch/docker-ftp-server`` carries BuildKit
+in-image attestations. They are bound to the image digest and are retained for the
+lifetime of the image, not for a workflow-artifact retention window.
+
+SPDX SBOM:
+
+.. code-block:: shell
+
+  docker buildx imagetools inspect \
+    ghcr.io/netresearch/docker-ftp-server:latest \
+    --format '{{ json .SBOM }}'
+
+SLSA build provenance (``mode=max``):
+
+.. code-block:: shell
+
+  docker buildx imagetools inspect \
+    ghcr.io/netresearch/docker-ftp-server:latest \
+    --format '{{ json .Provenance }}'
+
+The publish workflow previously also uploaded the SBOM as a downloadable ``sbom``
+workflow artifact (90-day retention). That artifact is no longer produced; use the
+registry commands above instead.
+
+
 Security Considerations
 -----------------------
 
