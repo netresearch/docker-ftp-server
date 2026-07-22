@@ -32,12 +32,8 @@ jobs:
       targets: ftp-server
       # Platforms (linux/amd64, linux/arm64) are declared in docker-bake.hcl.
       push: true
-      # ci.yml's security-scan job only runs on push to main/master and on
-      # pull_request, so it never sees the `v*` tag pushes, release-published
-      # runs or workflow_dispatch runs that publish images here — those images
-      # were never scanned. Scan here as well so every *published* image is
-      # scanned. Trivy is report-only in the reusable (SARIF to code scanning,
-      # no exit-code), so this cannot fail a publish.
+      # Trivy-scan the image this workflow publishes; the reusable uploads the
+      # findings to code scanning as SARIF.
       scan: true
       # In-image SPDX SBOM attestation attached to every pushed image.
       # Replaces the previous downloadable `sbom` workflow artifact; retrieval
