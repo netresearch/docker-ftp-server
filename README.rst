@@ -81,9 +81,21 @@ If the transfer log is enabled it will be stored in /var/log/vsftp.log within th
 Supply chain metadata
 ---------------------
 
-Every image published to ``ghcr.io/netresearch/docker-ftp-server`` carries BuildKit
-in-image attestations. They are bound to the image digest and are retained for the
-lifetime of the image, not for a workflow-artifact retention window.
+Images published to ``ghcr.io/netresearch/docker-ftp-server`` by the current publish
+workflow carry BuildKit in-image attestations: an SPDX SBOM and SLSA build provenance
+(``mode=max``). They are bound to the image digest and are retained for the lifetime of
+the image, not for a workflow-artifact retention window.
+
+This applies to images built *after* the switch to the SBOM attestation. Images pushed
+before it carry provenance only and have no SBOM attestation — for those,
+``--format '{{ json .SBOM }}'`` returns no SPDX document. Check a specific image rather
+than assuming; the attestation manifests of an image are listed by
+
+.. code-block:: shell
+
+  docker buildx imagetools inspect \
+    ghcr.io/netresearch/docker-ftp-server:latest \
+    --raw
 
 SPDX SBOM:
 

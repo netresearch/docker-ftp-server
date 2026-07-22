@@ -15,10 +15,9 @@ jobs:
   build-and-push:
     name: Build and Push
     uses: netresearch/.github/.github/workflows/build-container-bake.yml@main
-    # security-events: write is required because the reusable workflow's job
-    # declares it; a caller granting less cannot start the called workflow.
-    # Nothing here consumes it (scan: false) — narrowing it is only possible by
-    # changing netresearch/.github's build-container-bake.yml, not from here.
+    # security-events: write is consumed by the Trivy SARIF upload (scan: true),
+    # and is required in any case because the reusable workflow's job declares
+    # it: a caller granting less cannot start the called workflow.
     permissions:
       contents: read
       packages: write
@@ -33,10 +32,13 @@ jobs:
       targets: ftp-server
       # Platforms (linux/amd64, linux/arm64) are declared in docker-bake.hcl.
       push: true
-      # No Trivy scan here: vulnerability scanning is owned by ci.yml. This
-      # workflow never scanned, and enabling it would add a new code-scanning
-      # stream on tag/release refs.
-      scan: false
+      # ci.yml's security-scan job only runs on push to main/master and on
+      # pull_request, so it never sees the `v*` tag pushes, release-published
+      # runs or workflow_dispatch runs that publish images here — those images
+      # were never scanned. Scan here as well so every *published* image is
+      # scanned. Trivy is report-only in the reusable (SARIF to code scanning,
+      # no exit-code), so this cannot fail a publish.
+      scan: true
       # In-image SPDX SBOM attestation attached to every pushed image.
       # Replaces the previous downloadable `sbom` workflow artifact; retrieval
       # is documented in README.rst ("Supply chain metadata").
