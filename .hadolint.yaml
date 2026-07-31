@@ -1,0 +1,5 @@
+# Preserved from the previous inline `ignore: DL3018` in .github/workflows/ci.yml.
+# The central docker-image-ci reusable mounts this config into the hadolint run.
+# DL3018: pin versions in apk add (base image intentionally tracks latest apk).
+ignored:
+  - DL3018
