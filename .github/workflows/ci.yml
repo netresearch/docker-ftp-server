@@ -10,6 +10,7 @@ on:
       - main
       - master
   workflow_dispatch:
+  merge_group:
 
 permissions:
   contents: read
