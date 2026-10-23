@@ -9,6 +9,8 @@ on:
       - 'v*'
   release:
     types: [published]
+  schedule:
+    - cron: '0 6 * * 1'  # Weekly security rebuild
   workflow_dispatch:
 
 jobs:
@@ -32,6 +34,10 @@ jobs:
       targets: ftp-server
       # Platforms (linux/amd64, linux/arm64) are declared in docker-bake.hcl.
       push: true
+      # The weekly run exists to pick up OS patches through `apk upgrade`.
+      # With the layer cache on, that step is restored from the previous
+      # build and the rebuild publishes the same packages again.
+      cache: ${{ github.event_name != 'schedule' }}
       # Trivy-scan the image this workflow publishes; the reusable uploads the
       # findings to code scanning as SARIF.
       scan: true
