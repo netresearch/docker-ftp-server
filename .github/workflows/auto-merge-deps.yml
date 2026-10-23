@@ -11,6 +11,10 @@ permissions: {}
 
 jobs:
   auto-merge:
+    # The reusable checks only the PR author. This also requires the bot to
+    # have triggered the event, so that a human push to a bot branch or a
+    # human reopen is not approved and merged unreviewed.
+    if: github.actor == 'dependabot[bot]' || github.actor == 'renovate[bot]'
     uses: netresearch/.github/.github/workflows/auto-merge-deps.yml@main
     with:
       merge-strategy: merge
